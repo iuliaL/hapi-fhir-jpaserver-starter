@@ -1,18 +1,26 @@
-# Use the official Maven image with OpenJDK 11
+# Use Maven image with OpenJDK 17
 FROM maven:3.8.4-openjdk-17-slim as build
 
-
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the local project files into the container
+# Copy the entire project to the container
 COPY . .
 
-# Build the project with Maven (skip tests for faster build)
+# Build the project with Maven (without tests for faster build)
 RUN mvn clean install -DskipTests
 
-# Expose the port that the HAPI server will run on
+# Use a smaller image for the final image
+FROM openjdk:17-jdk-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/*.jar fhir-server-minimal.jar
+
+# Expose port for the server
 EXPOSE 8080
 
-# Start the application
-CMD ["java", "-jar", "target/fhir-server-minimal.jar"]
+# Run the JAR file
+CMD ["java", "-jar", "fhir-server-minimal.jar"]
