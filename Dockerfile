@@ -17,6 +17,10 @@ WORKDIR /app
 # Copy the generated WAR from the build stage
 COPY --from=build /app/target/ROOT.war fhir-server.war
 
+# Set default environment variables
+ENV HAPI_FHIR_VERSION=R4
+ENV HAPI_FHIR_CR_ENABLED=false
+
 # Expose the port (Render.com will override this with their own port)
 EXPOSE 8080
 

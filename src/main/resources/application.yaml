@@ -36,9 +36,9 @@ spring:
 # HAPI FHIR settings
 hapi:
   fhir:
-    version: R4
+    fhir_version: ${HAPI_FHIR_VERSION:R4}
     allow_external_references: true
     allow_multiple_delete: true
     reuse_cached_search_results_millis: 60000
     retain_cached_searches_mins: 10
-    cr_enabled: false
+    cr_enabled: ${HAPI_FHIR_CR_ENABLED:false}
