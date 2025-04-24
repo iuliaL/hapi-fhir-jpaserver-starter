@@ -24,6 +24,11 @@ ENV HAPI_FHIR_CR_ENABLED=false
 # Expose the port
 EXPOSE 8080
 
-# Run the app
-CMD ["java", "-Xmx512m", "-jar", "fhir-server.war"]
+# Run the app with optimized settings for cloud deployment
+CMD ["java", \
+     "-Xmx512m", \
+     "-XX:+UseSerialGC", \
+     "-Djava.security.egd=file:/dev/./urandom", \
+     "-Dspring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false", \
+     "-jar", "fhir-server.war"]
     

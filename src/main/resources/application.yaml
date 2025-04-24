@@ -9,12 +9,18 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 10
+        generate_statistics: false
   main:
     allow-bean-definition-overriding: true
+    lazy-initialization: true
+  flyway:
+    enabled: false
 
 # HAPI FHIR settings
 hapi:
@@ -22,4 +28,9 @@ hapi:
     fhir_version: ${HAPI_FHIR_VERSION:R4}
     allow_external_references: true
     allow_multiple_delete: true
-    cr_enabled: ${HAPI_FHIR_CR_ENABLED:false}
+    cr_enabled: false
+    validation:
+      enabled: false
+    jpa:
+      defer_indexing_for_codesystems_of_size: 101
+      auto_create_placeholder_references: true
