@@ -18,17 +18,16 @@ WORKDIR /app
 COPY --from=build /app/target/ROOT.war fhir-server.war
 
 # Set default environment variables
-ENV HAPI_FHIR_VERSION=R4
-ENV HAPI_FHIR_CR_ENABLED=false
+ENV PORT=8080 \
+    HAPI_FHIR_VERSION=R4 \
+    HAPI_FHIR_CR_ENABLED=false
 
-# Expose the port
+# Set JVM options
+ENV JAVA_OPTS="-Xmx1024m -XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -Djava.security.egd=file:/dev/./urandom"
+
+# Expose the port your Spring Boot app listens on
 EXPOSE 8080
 
-# Run the app with optimized settings for cloud deployment
-CMD ["java", \
-     "-Xmx512m", \
-     "-XX:+UseSerialGC", \
-     "-Djava.security.egd=file:/dev/./urandom", \
-     "-Dspring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false", \
-     "-jar", "fhir-server.war"]
+# Run the app
+CMD ["sh", "-c", "java $JAVA_OPTS -jar fhir-server.war"]
     

@@ -5,7 +5,7 @@ server:
 # Database Configuration
 spring:
   datasource:
-    url: ${INTERNAL_DATABASE_URL:jdbc:postgresql://localhost:5432/fhir_db}
+    url: jdbc:${INTERNAL_DATABASE_URL}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -13,9 +13,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        jdbc:
-          batch_size: 10
-        generate_statistics: false
+        format_sql: false
+        show_sql: false
   main:
     allow-bean-definition-overriding: true
     lazy-initialization: true
@@ -26,9 +25,11 @@ spring:
 hapi:
   fhir:
     fhir_version: ${HAPI_FHIR_VERSION:R4}
+    cr_enabled: ${HAPI_FHIR_CR_ENABLED:false}
     allow_external_references: true
     allow_multiple_delete: true
-    cr_enabled: false
+    reuse_cached_search_results_millis: 60000
+    retain_cached_searches_mins: 10
     validation:
       enabled: false
     jpa:
