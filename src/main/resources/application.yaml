@@ -2,19 +2,6 @@
 server:
   port: ${PORT:8080}
 
-# Management settings for health and metrics endpoints
-management:
-  endpoints:
-    enabled-by-default: false
-    web:
-      exposure:
-        include: 'health'
-  endpoint:
-    health:
-      enabled: true
-      probes:
-        enabled: true
-
 # Database Configuration
 spring:
   datasource:
@@ -22,16 +9,12 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: false
-        show_sql: false
   main:
-    lazy-initialization: true
-  flyway:
-    enabled: false
+    allow-bean-definition-overriding: true
 
 # HAPI FHIR settings
 hapi:
@@ -39,6 +22,4 @@ hapi:
     fhir_version: ${HAPI_FHIR_VERSION:R4}
     allow_external_references: true
     allow_multiple_delete: true
-    reuse_cached_search_results_millis: 60000
-    retain_cached_searches_mins: 10
     cr_enabled: ${HAPI_FHIR_CR_ENABLED:false}

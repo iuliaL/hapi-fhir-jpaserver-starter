@@ -21,9 +21,9 @@ COPY --from=build /app/target/ROOT.war fhir-server.war
 ENV HAPI_FHIR_VERSION=R4
 ENV HAPI_FHIR_CR_ENABLED=false
 
-# Expose the port (Render.com will override this with their own port)
+# Expose the port
 EXPOSE 8080
 
 # Run the app
-CMD ["java", "-jar", "fhir-server.war"]
+CMD ["java", "-Xmx512m", "-jar", "fhir-server.war"]
     
