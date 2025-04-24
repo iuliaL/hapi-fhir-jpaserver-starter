@@ -1,6 +1,6 @@
 # Server Configuration
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 # Management settings for health and metrics endpoints
 management:
@@ -15,19 +15,19 @@ management:
       probes:
         enabled: true
 
-# Database Configuration (adjust this as needed)
+# Database Configuration
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: ${INTERNAL_DATABASE_URL:jdbc:postgresql://localhost:5432/fhir_db}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-      show_sql: false
-      format_sql: false
-      dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        show_sql: false
   main:
     lazy-initialization: true
   flyway:
@@ -41,3 +41,4 @@ hapi:
     allow_multiple_delete: true
     reuse_cached_search_results_millis: 60000
     retain_cached_searches_mins: 10
+    cr_enabled: false

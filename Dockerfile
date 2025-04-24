@@ -1,26 +1,25 @@
-# Use Maven image with OpenJDK 17
-FROM maven:3.8.4-openjdk-17-slim as build
+# -------- Build Stage --------
+FROM maven:3.8.4-openjdk-17-slim AS build
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the entire project to the container
+# Copy the whole project into the container
 COPY . .
 
-# Build the project with Maven (without tests for faster build)
-RUN mvn clean install -DskipTests
+# Build the project using the 'boot' profile, skipping tests
+RUN mvn clean package -Pboot -DskipTests
 
-# Use a smaller image for the final image
+# -------- Run Stage --------
 FROM openjdk:17-jdk-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the JAR file from the build stage
-COPY --from=build /app/target/*.jar fhir-server-minimal.jar
+# Copy the generated WAR from the build stage
+COPY --from=build /app/target/ROOT.war fhir-server.war
 
-# Expose port for the server
+# Expose the port (Render.com will override this with their own port)
 EXPOSE 8080
 
-# Run the JAR file
-CMD ["java", "-jar", "fhir-server-minimal.jar"]
+# Run the app
+CMD ["java", "-jar", "fhir-server.war"]
+    
